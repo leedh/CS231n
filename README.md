@@ -1,4 +1,4 @@
-# CS231n
+# CS231n : Convolutional Neural Networks for Visual Recognition
 my assignment solutions to the [CS231n](http://cs231n.stanford.edu) Spring 2020 course offered by Stanford University 
 
 - Python Numpy Tutorial [original](https://cs231n.github.io/python-numpy-tutorial/) / [한글번역](http://aikorea.org/cs231n/python-numpy-tutorial/)
