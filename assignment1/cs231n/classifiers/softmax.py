@@ -33,7 +33,24 @@ def softmax_loss_naive(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    num_train = X.shape[0]
+
+    for i in range(num_train):
+      score_matrix = X[i,:].dot(W)
+      
+      p = np.exp(score_matrix)/np.sum(np.exp(score_matrix))
+
+      loss -= np.log(p[y[i]])
+
+      grad_q = p.reshape(1,-1)
+      grad_q[0, y[i]] += -1
+
+      dW += X[i,:].reshape(-1,1).dot(grad_q)
+
+    loss /= num_train
+    loss += reg * np.sum(W*W)
+    dW /= num_train
+    dW += 2 * reg * W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -58,7 +75,23 @@ def softmax_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    num_train = X.shape[0]
+
+    score_matrix = X.dot(W)
+    exp_score_matrix = np.exp(score_matrix)
+    
+    p = exp_score_matrix / np.sum(exp_score_matrix, axis = 1).reshape(-1, 1)
+
+    loss -= np.sum(np.log(p[range(num_train), y])) 
+
+    grad_q = p
+    grad_q[range(num_train), y] += -1
+    dW = X.T.dot(grad_q)
+
+    loss /= num_train
+    loss += reg * np.sum(W*W)
+    dW /= num_train
+    dW += 2 * reg * W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
