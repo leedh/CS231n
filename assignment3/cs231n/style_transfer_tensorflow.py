@@ -16,7 +16,12 @@ def tv_loss(img, tv_weight):
     # Your implementation should be vectorized and not require any loops!
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    first_sum = tf.reduce_sum(tf.square(img[:,1:,:,:] - img[:,:-1,:,:])**2)
+    second_sum = tf.reduce_sum(tf.square(img[:,:,1:,:] - img[:,:,:-1,:])**2)
+    
+    loss = tv_weight * (first_sum + second_sum)
+    
+    return loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -42,7 +47,15 @@ def style_loss(feats, style_layers, style_targets, style_weights):
     # not be short code (~5 lines). You will need to use your gram_matrix function.
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    loss = 0
+
+    for i in range(len(style_layers)):
+        layer = style_layers[i]
+        G = gram_matrix(feats[layer])
+        A = gram_matrix(style_targets[i])
+        loss += style_weights[i] * tf.reduce_sum(tf.square(G - A))
+    
+    return loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -62,7 +75,13 @@ def gram_matrix(features, normalize=True):
     """
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    features = tf.reshape(features, (-1, features.shape[-1]))
+    gram = tf.linalg.matmul(tf.transpose(features), features)
+
+    if normalize:
+        gram = gram / (features.shape[0] * features.shape[1])
+    
+    return gram
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -80,7 +99,8 @@ def content_loss(content_weight, content_current, content_original):
     """
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    content_loss = content_weight * tf.math.reduce_sum((content_current - content_original)**2)
+    return content_loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
